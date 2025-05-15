@@ -63,4 +63,3 @@ group :test do
 end
 
 gem "airrecord"
-gem "debug"
