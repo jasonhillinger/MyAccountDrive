@@ -5,7 +5,7 @@ application up and running.
 
 Things you may want to cover:
 
-* Ruby version
+* Ruby version 3.4.4
 
 * System dependencies
 
@@ -21,4 +21,7 @@ Things you may want to cover:
 
 * Deployment instructions
 
-* ...
+To run server in DEBUG start server with the following command: RUBY_DEBUG_OPEN=true RUBY_DEBUG_PORT=12345 rails s
+
+To run server regularly run the following command :
+rails server
