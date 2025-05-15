@@ -14,5 +14,4 @@ Rails.application.routes.draw do
 
   post "user/create" => "user#create"
   post "user/login"  => "user#login"
-
 end
