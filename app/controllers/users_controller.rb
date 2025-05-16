@@ -1,13 +1,16 @@
 class UsersController < ApplicationController
+  # For debugging
+  # protect_from_forgery with: :null_session
+  # skip_before_action :verify_authenticity_token, if: -> { request.format.json? }
+
   def create
     begin
-      username = "test1"
-      password = "password123"
+      username  = User.generateRandomUsername
+      password = params[:password]
 
       User.create("username" => username, "password" => password, "status" => "ACTIVE")
       response = {
-          "username" => username,
-          "password" => password
+          "username" => username
       }
 
       status = 200
