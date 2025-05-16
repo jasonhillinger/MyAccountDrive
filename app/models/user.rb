@@ -5,6 +5,7 @@ class User < Airrecord::Table
   self.table_name = "users"
 
   MAX_LENGTH_PASSWORD = 100
+  MIN_LENGTH_PASSWORD = 10
 
   STATUS_ACTIVE = "ACTIVE"
   STATUS_INACTIVE = "INACTIVE"
@@ -15,5 +16,9 @@ class User < Airrecord::Table
       random = Random.new(seed)
 
       random.bytes(16).unpack1("H*")
+    end
+
+    def self.is_valid_password?(password)
+      !password.nil? and password.length < self::MAX_LENGTH_PASSWORD and password.length > self::MIN_LENGTH_PASSWORD
     end
 end

@@ -7,10 +7,11 @@ class UsersController < ApplicationController
     begin
       username  = User.generateRandomUsername
       password = params[:password]
-
-      if password.length > User::MAX_LENGTH_PASSWORD
+      debugger
+      # TODO: also check if password is nil
+      if !User.is_valid_password?(password)
         status = 400
-        raise "Password length must be less than #{User::MAX_LENGTH_PASSWORD} characters."
+        raise "Password length must be less than #{User::MAX_LENGTH_PASSWORD} characters and greater than #{User::MIN_LENGTH_PASSWORD} characters."
       end
 
       password = Obfuscator.obfuscate(password)
@@ -33,5 +34,31 @@ class UsersController < ApplicationController
   end
 
   def login
+    begin
+      username  = params[:username]
+      password = params[:password]
+
+      if !User.is_valid_password?(password)
+        status = 400
+        raise "Password length must be less than #{User::MAX_LENGTH_PASSWORD} characters and greater than #{User::MIN_LENGTH_PASSWORD} characters."
+      end
+
+      password = Obfuscator.obfuscate(password)
+
+
+      response = {
+          "username" => username
+      }
+
+      status = 200
+
+    rescue => e
+      Rails.logger.error("Failed to create user: #{e.message}")
+      response =  { "error" => e.message }
+
+      status = nil != status ? status : 500
+    end
+
+    render json: response, status: status
   end
 end
