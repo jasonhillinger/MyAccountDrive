@@ -41,13 +41,19 @@ class UsersController < ApplicationController
         raise "Password length must be less than #{User::MAX_LENGTH_PASSWORD} characters and greater than #{User::MIN_LENGTH_PASSWORD} characters."
       end
 
-      if !User.is_valid_username?(password)
+      if !User.is_valid_username?(username)
         status = 400
-        raise ""
+        raise "Username length must be #{User::USERNAME_LENGTH} characters long."
       end
 
       password = Obfuscator.obfuscate(password)
+      user = User.all(filter: "AND({username} = '#{username}', {password} = '#{password}', {status} = '#{User::STATUS_ACTIVE}')")
 
+      # Check if user is empty, raise error if so
+      if 0 == user.length
+        status = 404
+        raise "Username or wrong password"
+      end
 
       response = {
           "username" => username

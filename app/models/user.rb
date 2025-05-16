@@ -25,7 +25,7 @@ class User < Airrecord::Table
       !password.nil? and password.length < self::MAX_LENGTH_PASSWORD and password.length > self::MIN_LENGTH_PASSWORD
     end
 
-    def self.is_valid_username?
+    def self.is_valid_username?(username)
       !username.nil? and self::USERNAME_LENGTH == username.length
     end
 end
