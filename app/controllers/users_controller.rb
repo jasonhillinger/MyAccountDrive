@@ -8,17 +8,25 @@ class UsersController < ApplicationController
       username  = User.generateRandomUsername
       password = params[:password]
 
-      User.create("username" => username, "password" => password, "status" => "ACTIVE")
+      if password.length > User::MAX_LENGTH_PASSWORD
+        status = 400
+        raise "Password length must be less than #{User::MAX_LENGTH_PASSWORD} characters."
+      end
+
+      password = Obfuscator.obfuscate(password)
+
+      User.create("username" => username, "password" => password, "status" => User::STATUS_ACTIVE)
       response = {
           "username" => username
       }
 
       status = 200
 
-    rescue StandardError => e
+    rescue => e
       Rails.logger.error("Failed to create user: #{e.message}")
       response =  { "error" => e.message }
-      status = 500
+
+      status = nil != status ? status : 500
     end
 
     render json: response, status: status
