@@ -52,7 +52,7 @@ class UsersController < ApplicationController
       # Check if user is empty, raise error if so
       if 0 == user.length
         status = 404
-        raise "Username or wrong password"
+        raise "Wrong username or password"
       end
 
       response = {
