@@ -4,6 +4,8 @@ class User < Airrecord::Table
   self.base_key = Rails.application.credentials.dig(:airtable, :base_key_users)
   self.table_name = "users"
 
+  USERNAME_LENGTH = 32
+
   MAX_LENGTH_PASSWORD = 100
   MIN_LENGTH_PASSWORD = 10
 
@@ -15,10 +17,15 @@ class User < Airrecord::Table
       seed = self.all.count
       random = Random.new(seed)
 
-      random.bytes(16).unpack1("H*")
+      byteVal = self::USERNAME_LENGTH / 2
+      random.bytes(byteVal).unpack1("H*")
     end
 
     def self.is_valid_password?(password)
       !password.nil? and password.length < self::MAX_LENGTH_PASSWORD and password.length > self::MIN_LENGTH_PASSWORD
+    end
+
+    def self.is_valid_username?
+      !username.nil? and self::USERNAME_LENGTH == username.length
     end
 end

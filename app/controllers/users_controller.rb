@@ -7,8 +7,6 @@ class UsersController < ApplicationController
     begin
       username  = User.generateRandomUsername
       password = params[:password]
-      debugger
-      # TODO: also check if password is nil
       if !User.is_valid_password?(password)
         status = 400
         raise "Password length must be less than #{User::MAX_LENGTH_PASSWORD} characters and greater than #{User::MIN_LENGTH_PASSWORD} characters."
@@ -41,6 +39,11 @@ class UsersController < ApplicationController
       if !User.is_valid_password?(password)
         status = 400
         raise "Password length must be less than #{User::MAX_LENGTH_PASSWORD} characters and greater than #{User::MIN_LENGTH_PASSWORD} characters."
+      end
+
+      if !User.is_valid_username?(password)
+        status = 400
+        raise ""
       end
 
       password = Obfuscator.obfuscate(password)
