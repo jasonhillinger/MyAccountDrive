@@ -56,7 +56,7 @@ class UsersController < ApplicationController
       end
 
       response = {
-          "username" => username
+          "TEMP" => "SUCCESS"
       }
 
       status = 200
