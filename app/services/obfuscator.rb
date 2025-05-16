@@ -1,5 +1,3 @@
-
-
 class Obfuscator
   attr_reader :encryptor
 
@@ -14,5 +12,11 @@ class Obfuscator
 
   def self.unobfuscate(input)
     new.encryptor.decrypt_and_verify(input)
+  end
+
+  # Deterministically encrypts
+  def self.encrypt(input)
+    secret = Rails.application.credentials.dig(:obfuscator, :secret_key)
+    OpenSSL::HMAC.hexdigest("SHA256", secret, input.to_s)
   end
 end

@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   # For debugging
-  # protect_from_forgery with: :null_session
-  # skip_before_action :verify_authenticity_token, if: -> { request.format.json? }
+  protect_from_forgery with: :null_session
+  skip_before_action :verify_authenticity_token, if: -> { request.format.json? }
 
   def create
     begin
@@ -12,7 +12,7 @@ class UsersController < ApplicationController
         raise "Password length must be less than #{User::MAX_LENGTH_PASSWORD} characters and greater than #{User::MIN_LENGTH_PASSWORD} characters."
       end
 
-      password = Obfuscator.obfuscate(password)
+      password = Obfuscator.encrypt(password)
 
       User.create("username" => username, "password" => password, "status" => User::STATUS_ACTIVE)
       response = {
@@ -46,7 +46,7 @@ class UsersController < ApplicationController
         raise "Username length must be #{User::USERNAME_LENGTH} characters long."
       end
 
-      password = Obfuscator.obfuscate(password)
+      password = Obfuscator.encrypt(password)
       user = User.all(filter: "AND({username} = '#{username}', {password} = '#{password}', {status} = '#{User::STATUS_ACTIVE}')")
 
       # Check if user is empty, raise error if so
