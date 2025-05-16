@@ -12,9 +12,8 @@ class UsersController < ApplicationController
         raise "Password length must be less than #{User::MAX_LENGTH_PASSWORD} characters and greater than #{User::MIN_LENGTH_PASSWORD} characters."
       end
 
-      password = Obfuscator.encrypt(password)
+      User.createActive(username, password)
 
-      User.create("username" => username, "password" => password, "status" => User::STATUS_ACTIVE)
       response = {
           "username" => username
       }
@@ -46,8 +45,7 @@ class UsersController < ApplicationController
         raise "Username length must be #{User::USERNAME_LENGTH} characters long."
       end
 
-      password = Obfuscator.encrypt(password)
-      user = User.all(filter: "AND({username} = '#{username}', {password} = '#{password}', {status} = '#{User::STATUS_ACTIVE}')")
+      user = User.getActiveUser(username, password)
 
       # Check if user is empty, raise error if so
       if 0 == user.length

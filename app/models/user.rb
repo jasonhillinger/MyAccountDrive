@@ -28,4 +28,14 @@ class User < Airrecord::Table
     def self.is_valid_username?(username)
       !username.nil? and self::USERNAME_LENGTH == username.length
     end
+
+    def self.createActive(username, password)
+      password = Obfuscator.encrypt(password)
+      User.create("username" => username, "password" => password, "status" => User::STATUS_ACTIVE)
+    end
+
+    def self.getActiveUser(username, password)
+      password = Obfuscator.encrypt(password)
+      User.all(filter: "AND({username} = '#{username}', {password} = '#{password}', {status} = '#{self::STATUS_ACTIVE}')")
+    end
 end
