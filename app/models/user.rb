@@ -23,6 +23,15 @@ class User < Airrecord::Table
       user
     end
 
+    def self.getUserFromDB(username, password)
+      user = self.getActiveUser(username, password)
+      if user.length == 0
+        return nil
+      end
+
+      user = self.initObject(user)
+    end
+
     def self.generateRandomUsername
       seed = self.all.count
       random = Random.new(seed)

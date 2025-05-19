@@ -45,11 +45,10 @@ class UsersController < ApplicationController
         raise "Username length must be #{User::USERNAME_LENGTH} characters long."
       end
 
-      user = User.getActiveUser(username, password)
-      user = User.initObject(user)
+      user = User.getUserFromDB(username, password)
 
       # Check if user is empty, raise error if so
-      if 0 == user.length
+      if nil == user
         status = 404
         raise "Wrong username or password"
       end
