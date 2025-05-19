@@ -46,6 +46,7 @@ class UsersController < ApplicationController
       end
 
       user = User.getActiveUser(username, password)
+      user = User.initObject(user)
 
       # Check if user is empty, raise error if so
       if 0 == user.length
@@ -53,8 +54,11 @@ class UsersController < ApplicationController
         raise "Wrong username or password"
       end
 
+      # Give the user proper cookie
+      cookies.signed[:user_id] = user["id"]
+
       response = {
-          "TEMP" => "SUCCESS"
+          "status" => "success"
       }
 
       status = 200

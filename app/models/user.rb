@@ -1,7 +1,7 @@
 Airrecord.api_key = Rails.application.credentials.dig(:airtable, :api_key)
 
 class User < Airrecord::Table
-  attr_reader :username, :status
+  attr_reader :id, :username, :status
 
   self.base_key = Rails.application.credentials.dig(:airtable, :base_key_users)
   self.table_name = "users"
@@ -15,10 +15,12 @@ class User < Airrecord::Table
   STATUS_INACTIVE = "INACTIVE"
   STATUS_DEACTIVATED = "DEACTIVATED"
 
-    def initialize(dbOject)
-      user = dbOject.fields[0]
+    def self.initObject(dbOject)
+      user = dbOject[0].fields
+      @id       = user["id"]
       @username = user["username"]
       @status   = user["status"]
+      user
     end
 
     def self.generateRandomUsername
